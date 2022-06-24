@@ -20,3 +20,6 @@ TOKEN=<TOKEN key pushover>
 - Better error handling 
 - Add automatic User and Token saving
 - Add more args for title or anything else
+
+## Extra comments
+This is still in its production stage. And as I'm a 14 year old, I would not trust this to work for a serious product
