@@ -32,7 +32,7 @@ fn get_token_and_user() -> (String, String) {
     let mut token: String = String::new();
 
     for (key, value) in vars() {
-        if key == "USER" {
+        if key == "USERAPI" {
             user = value;
         }
         else if key == "TOKEN" {
