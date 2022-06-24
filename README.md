@@ -8,6 +8,8 @@ Just run it with args and it will send a message
 It would return with a success or failure
 
 ## Setup
+Compile the rust application and move it to your bin folder or wherever you want it to be located.
+
 Where the executable is located, you would need to create a file called .env
 In that file you would want to type
 ```
