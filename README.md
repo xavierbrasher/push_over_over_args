@@ -13,7 +13,7 @@ Compile the rust application and move it to your bin folder or wherever you want
 Where the executable is located, you would need to create a file called .env
 In that file you would want to type
 ```
-USER=<USER key pushover>
+USERAPI=<USER key pushover>
 TOKEN=<TOKEN key pushover>
 ``` 
 ## To do
