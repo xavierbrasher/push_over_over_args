@@ -62,12 +62,7 @@ fn main() {
     let (user, token) : (String, String) = get_token_and_user();
     let mut final_message: Notification = Notification { token: token, user: user, message: message, title: String::from("Rust Pushover"), responce: None };
     match send_message(&mut final_message) {
-        Ok(_) => {
-            println!("Sent notification");
-        },
-        Err(e) => {
-            println!("Failed to send notification. Error: {:?}", e);
-        }
+        Ok(_) => println!("Sent notification"),
+        Err(e) => println!("Failed to send notification. Error: {:?}", e)
     }
-    
 }
