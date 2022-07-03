@@ -1,8 +1,34 @@
 use std::env::{args, vars};
 use dotenv::dotenv;
 use reqwest::{self, Response};
-mod default_libary;
-use default_libary::*;
+
+pub fn input() -> String {
+    // gets stdin and sets to buffer
+    let mut input: String = String::new();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read");
+
+    // get tmps and removes the last 2 characters of it    
+    let mut tmp: String = String::new();
+    let mut tmp_chars = input.chars();
+    for x in 0..input.len() {
+        if cfg!(unix) {
+            if x == (input.len() - 1) {
+                break;
+            }
+        }
+        else if cfg!(windows) {
+            if x == (input.len() - 2) {
+                break;
+            }
+        }
+        
+        tmp.push(tmp_chars.nth(0).unwrap());
+    }
+    // returns the modified tmp
+    return tmp;
+}
 
 static HELPMESSAGE: &str = 
 "Usage: push_over_over_args [options] [message]
@@ -17,7 +43,9 @@ Option:
 Environment variables:
 
 USERAPI                 The user api key in pushover (necessary)
-TOKEN                   The application token in pushover (necessary)";
+TOKEN                   The application token in pushover (necessary)
+TITLE                   The Notifications defualt title, Defult is useally \"Rust Push Notification\" (optional)
+";
 
 struct Notification {
     token: String,
@@ -66,11 +94,11 @@ fn collect_args() -> Notification {
     message
 }
 
-fn get_token_and_user() -> (String, String) {
+fn get_token_and_user(notification: &mut Notification) -> bool {
     dotenv().ok();
     let mut user: String = String::new();
     let mut token: String = String::new();
-
+    let mut title: String = String::new();
     for (key, value) in vars() {
         if key == "USERAPI" {
             user = value;
@@ -78,8 +106,19 @@ fn get_token_and_user() -> (String, String) {
         else if key == "TOKEN" {
             token = value;
         }
+        else if key == "TITLE" {
+            title = value;
+        }
     }
-    (user, token)
+    if user == "" || token == "" {
+        return false;
+    }
+    notification.user = user;
+    notification.token = token;
+    if notification.title == "Rust Push Message" && title != "" {
+        notification.title = title
+    }
+    true
 }
 
 #[tokio::main]
@@ -104,8 +143,11 @@ fn main() {
         println!("{}", HELPMESSAGE);
         return;
     }
-    let (user, token) : (String, String) = get_token_and_user();
-    (message.user, message.token) = (user, token);
+    let worked: bool = get_token_and_user(&mut message);
+    if worked == false {
+        return println!("No USERAPI or TOKEN enviromental variables");
+    }
+
     match send_message(&mut message) {
         Ok(_) => println!("Sent notification"),
         Err(e) => println!("Failed to send notification. Error: {:#?}", e)

@@ -16,6 +16,10 @@ In that file you would want to type
 USERAPI=<USER key pushover>
 TOKEN=<TOKEN key pushover>
 ``` 
+If you would like change the defualt title, you can add an other enviroment variable 
+```
+TITLE="<Title you would want>"
+```
 ## To do
 - Better error handling 
 - Add automatic User and Token saving
